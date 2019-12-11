@@ -94,7 +94,7 @@
 \subsubsection{研究背景}%3.1.1
 %%%%%%%%%%%%%%%%%%%%%%%%%
 隨著各種形式的多媒體應用發展，對於網路頻寬的需求日益漸增，現在802.11 無線基地台已成為多數人不可或缺的生活工具，主要原因有三點，1、成本不高，大多數人都可負擔。2、架設簡單，不需要專人幫忙架設。3、傳輸速度快，足夠供給區域網路(LAN)內的使用者使用。綜合以上優點，WIFI在下世代網路是一個不可或缺的角色。所以如何在無線環境下將資料的吞吐量(throughput) 提升至理論最大值成了一門重要的課題。由於無線媒體是共享的，因此媒體存取控制(MAC)協定在協調媒體的存取以及效能最佳化的方面扮演著十分關鍵的角色。
-此外[31]在802.11ax(WIFI6)中，CSMA/CA依舊是非常重要的媒體存取控制協議 (MAC protocol)，當節點(node)有封包需要傳送時，會透過此機制判斷目前的通道是否可以傳輸，當偵測到的通道能量低於安全通道評估閾值(clear channel assessment CCA, threshold)，則會再使用競爭視窗(contention window)，透過隨機選擇初始後退計時器(backoff counter)來進行倒數，當節點偵測到空閒的通道時則計時器減1，但是若有傳輸在此通道進行時，則所有在同一個WLAN或其他WLANs的node計時器會暫停，直到計時器歸零時才能夠進行傳輸。
+此外\cite{31}在802.11ax(WIFI6)中，CSMA/CA依舊是非常重要的媒體存取控制協議 (MAC protocol)，當節點(node)有封包需要傳送時，會透過此機制判斷目前的通道是否可以傳輸，當偵測到的通道能量低於安全通道評估閾值(clear channel assessment CCA, threshold)，則會再使用競爭視窗(contention window)，透過隨機選擇初始後退計時器(backoff counter)來進行倒數，當節點偵測到空閒的通道時則計時器減1，但是若有傳輸在此通道進行時，則所有在同一個WLAN或其他WLANs的node計時器會暫停，直到計時器歸零時才能夠進行傳輸。
 在CSMA/CA 架構中，多重速率、多點跳躍的無線網路環境之下，我們可以根據環境的變化，動態調整載波偵聽門檻(carrier-sensing threshold, Tcs )，並進一步平衡空間重複使用率(spatial reuse) 及傳輸可靠度(transmission reliability) 來達到整體網路效能(network capacity) 的最佳化。較低的Tcs 會使偵聽範圍(carrier-sensing range,dcs ) 擴大，此情況下能降低並行傳輸(concurrent transmissions) 造成的封包碰撞，進而提高資料傳輸的可靠度。然而，整體的網路效能(network capacity) 會因為節點對於資料傳輸的嘗試太過於保守而下降；反之，較高的Tcs 會使dcs 縮小，這樣一來空間重複利用率會得到顯著的提高，但相對的潛在訊號干擾亦會隨著增加，導致封包碰撞更頻繁的發生。因此於建立在CSMA/CA 基礎上的無線網路之下根據當下環境情況適當的調節Tcs 是非常重要的。在本計畫中，我們將提出一個於分散式的無線環境之下，在合理的計算時間內用以動態調節Tcs 之值的適應性機制，預期模擬結果將會證實我們所提出的演算法所求得的網路效能，相較於其他現有的載波偵聽調節相關演算法，可以表現得更為突出。\\
 
 
@@ -315,6 +315,28 @@ $$
 \end{figure}
 %-------------------
 
+%-------------------
+\begin{figure}[hbt]
+\begin{center}
+\centering {\includegraphics[width=9cm]{eps/IEEE802.11ax_SINR_rate.eps}}
+\caption{IEEE 802.11ax中各速率最低SINR需求} \label{fig:IEEE802.11ax_SINR_rate}
+\vspace{-0.2cm}
+\end{center}
+\end{figure}
+%-------------------
+
+%-------------------
+\begin{figure}[hbt]
+    \begin{center}
+    \centering {\includegraphics[width=9cm]{eps/IEEE802.11ax_band_rate.eps}}
+    \caption{IEEE 802.11ax中各頻寬各種速率} \label{fig:IEEE802.11ax_band_rate}
+    \vspace{-0.2cm}
+    \end{center}
+    \end{figure}
+    %-------------------
+\vspace{2cm}
+
+
 \item [\bf ]{\textbf{\Kai C.3 碰撞區域(Collision Zone, CZ)的定義  }}\\
 \vspace{-2mm}
 
@@ -329,6 +351,7 @@ $$
 \end{center}
 \end{figure}
 %-------------------
+\vspace{1cm}
 
 我們定義 CZ 為一半徑為 $d_{cz}$ 的圓形範圍(關於 $d_{cz}$ 之值本小節後半部將詳述之)，在此範圍內若出現同步傳輸必定會導致碰撞的發生，載波偵測能避免 $d_{cs}$ 內的並行傳輸 (concurrent transmission) ， 但無法避免 $d_{cs}$ 內的同步傳輸 (simultaneous transmission)，因此我們令位於 $d_{cz}$ 外、$d_{cs}$ 內由同步傳輸所產生的訊號干擾的總和為 
 $I_{sim,d_{cz},d_{cs}}$，表示除了 $I_{con,d_{cz},d_{pg}}$ 之外的訊號干擾。並進一步觀察目前使用的 r[i]所對應的 $\beta[i]$是否能負荷這些額外的訊號干擾。在圖(4.3)中，我們將陰影部分切割為 K 個「甜甜圈」形狀的區域，每個區域的「厚度」皆以 Δd = ($d_{cs}$ - $d_{cz}$ ) / K 表示，接著分別計算各個區域內由該區域的傳送端所產生的干擾總和，最後將所有求得的干擾數值予以加總，就可以得到同步傳輸所產生的訊號干擾的總和$I_{sim,d_{cz},d_{pg}}$ 。
@@ -361,13 +384,8 @@ $$
 
 最後，令網路覆蓋範圍為 A、一個傳輸端的「使用區域」為 $A_s$ ，我們定義最終的網路效能 (network capacity) C 為並行傳輸(concurrent transmission)總數 $N_{tx}$ 與「協議效能」$\rho$ 的乘積，即$C = N_{tx}*\rho$。\\
 
-\end{enumerate}
 
-\subsubsection{第三年研究方法與執行進度}
-\begin{enumerate}
-\setlength\parindent{2em}
-
-\item [\bf A.]{\textbf{\Kai 網路效能最佳化 }}\\
+\item [\bf C.5]{\textbf{\Kai 網路效能最佳化 }}\\
 
 研究其他種最佳化演算法的原理與應用，並透過代入數據來驗證效能，實現前幾年提到：在變化快速的無線環境下，以最快的速度找出最佳$T_cs$以獲得最佳網路效能(network capacity)。
 
@@ -378,21 +396,21 @@ $$
 (4) 改良型演算法(Enhanced Algorithm)\\
 以求在有限時間內達到找出能產生最佳網路效能的$d_{cs}$及$CW$值。\\
 
-\item [\bf ]{\textbf{\Kai A.1. 登山演算法(Hill Climbing) }}\\
+\item [\bf ]{\textbf{\Kai C.5.1 登山演算法(Hill Climbing) }}\\
 
 登山演算法之概念為：給定一個二維函數圖形，x軸選定任一點並計算y軸數值(在此x軸為$d_{cs}$、y軸為網路效能$C$)，再隨機往左或右移動並計算數值。計算結果較佳則繼續前進，若計算結果較差則轉向換邊前進，直到求得峰值為止。
 
 此方法的優勢為快速、穩定、架構簡單且容易實現。但存在著明顯的缺陷，即最終找到的最佳解絕大部分為區域最佳解(local optimal solution)，而非我們所追求的全域最佳解(global optimum solution)，因此常常發生所找到的$d_{cs}$所對應的網路效能(network capacity)並未有效而顯著的提高。\\
 
 
-\item [\bf ]{\textbf{\Kai A.2. 模擬退火法(Simulated Annealing)  }}\\
+\item [\bf ]{\textbf{\Kai C.5.2 模擬退火法(Simulated Annealing)  }}\\
 
 模擬退火法是由登山演算法延伸而來，不同之處在於計算結果較差(下坡)時不會直接判定轉向，而是由一個機率式 $p_{con} = exp (- \Delta t / T)$ 來判斷繼續前進或是轉向。機率式的 $p_{con}$ 表示下坡繼續前進的機率、$\Delta t$為本次與前次計算結果差異之絕對值、$T$為剩餘時間(由預先設定的搜尋時間開始倒數至0為止)。由此式我們可以得知，$\Delta t$越大即「下坡」的幅度相對的越大，若套用到我們的分析模型表示目前所選定之$d_{cs}$會使網路效能大幅度降低，因此$p_{con}$也相對較低，即有很大的機率會轉向。另外若搜尋的時間持續太久，即$T$越接近0，亦會使$p_{con}$持續降低終致轉向，而停止搜尋條件為：(1)轉向2次；(2)$T$倒數至0。
 
 相對於登山演算法，此方法較有機會找到全域最佳解，而非搜尋到峰值就停止。但仍有一些情況無法避免且會導致效率不彰，如圖(5.1)所示，為節點個數為20時的$d_{cs}$與網路效能C的分布情形，我們可以很明顯地看到當$d_{cs}$在50以下對應的C全部都為0。其原因如(4.9)式所述，由於干擾總和 $I_{con,d_{cs},d_{pg}}$ 高於$T_{cs}$以致使節點判定目前媒體為忙線(busy)而停止傳送封包。如果一開始選定的$d_{cs}$在0到50之間，有可能造成時間浪費在搜尋「0點」上而導致效率不彰。另外，若碰到「緩降坡」的情形，即連續下坡但因下降的幅度$\delta t$皆非常小而不會轉向搜尋，亦會造成時間的浪費。因此我們將會針對上述提到的問題對模擬退火法做些許的修改以使之更適用於我們所提出的分析模型。\\
 
 
-\item [\bf ]{\textbf{\Kai A.3. 基因演算法(Genetic Algorithm)  }}\\
+\item [\bf ]{\textbf{\Kai C.5.3 基因演算法(Genetic Algorithm)  }}\\
 
 基因演算法的運作較類似於原始的不規則隨機搜尋，大致的概念為遺傳學中所述的「將優良的樣本相互交配有機會產生更優良的下一代」，其實際操作方法如下：\\
 (1) 隨機選擇數組樣本($d_{cs}$)組成母體。\\
@@ -405,7 +423,7 @@ $$
 此方法的優勢在於最終搜尋到的解多為全域最佳解，不會像登山法及模擬退火法常受限於區域最佳解。由於登山法及模擬退火法皆為「單粒子」搜尋法，即搜尋過程中兩者皆從一個點出發，而基因演算法為「多粒子」搜尋法，在計算適應函數、交配(crossover)及突變(mutation)的過程中是多點($d_{cs}$)同步進行的，因此較不會發生上述所提到的「0點」問題。但計算過程較為繁瑣且耗時，效率較傳統最佳化演算法來的低。\\
 
 
-\item [\bf ]{\textbf{\Kai A.4. 改良型演算法(Enhanced Algorithm) }}\\
+\item [\bf ]{\textbf{\Kai C.5.4 改良型演算法(Enhanced Algorithm) }}\\
 
 上述提到的三項最佳化演算法皆對增進網路效能(network capacity, $C$)有幫助，但存在著各自的缺陷。登山演算法快速、穩定且容易操作，但運算結果易侷限於區域最佳解以及先前提到的「0點」問題；模擬退火法稍微改善了登山演算法的區域最佳解問題，但實際運作時其效果有限且「0點」問題仍然存在；基因演算法則是透過多點搜尋有效解決了「0點」問題，但較為費時、計算繁瑣且效率不佳。因此，在考量以上因素後，我們提出了一種改良型演算法(Enhanced Algorithm)，結合上述提及的優點並加以改進。
 
@@ -420,7 +438,7 @@ $$
 另外，我們在以上演算法之中皆加入了調整競爭視窗($CW$)的機制。一般而言，$CW$值是一開始環境參數設定時所定，在搜尋過程中不會做修改，但由圖(5.1)我們可了解到$CW$值對網路效能$C$存在著一定程度的影響。而一開始所定的$CW$值並不一定為最適合當下環境的$CW$值，因此在找到最佳$d_{cs}$值而停止搜尋後，我們會針對不同的$CW$值再做網路效能$C$的計算，如此一來便能夠找到最佳$d_{cs}$、$CW$之組合以實現最佳化網路效能(network capacity)的目的。\\
 
 
-\item [\bf B.]{\textbf{\Kai 理論值計算及分析 }}\\
+\item [\bf ]{\textbf{\Kai C.6 理論值計算及分析 }}\\
 
 針對上述提及的演算法，我們使用\Tab{tab:env-parameter}所示的環境參數，來比較上述四種演算法應用於此分析模型的效能，並觀察一個特定範圍的無線網路環境中各節點(可能為固定節點或移動節點)存取網路資源的情形。
 
@@ -499,7 +517,7 @@ Packet size = 1125 Bytes & RTSThreshold = 3000 (disabled)\\
 %\newpage
 \subsection{預期成果}
 
-在這份三年的計畫中，我們總結每一年的預期成果如下: 
+在這份兩年的計畫中，我們總結每一年的預期成果如下: 
 
 \begin{enumerate}
 \setlength\parindent{2em}
@@ -540,15 +558,13 @@ Packet size = 1125 Bytes & RTSThreshold = 3000 (disabled)\\
 PCS Adaptation Algorithm Based on Loss Differentiation，是為一個結合傳輸速率選定與$T_{cs}$調節的演算法。它將整個資料傳輸的流程分為 (1) adaptation (2) normal operation兩個階段。處於階段(1)時，會進行傳輸速率的選定，環境中所有節點各自將其最小競爭視窗(CWmin)設定為一較大的值，以避免碰撞頻繁發生，透過蒐集各節點的RSSI (Received Signal Strength Indicator，一個類似SINR、用來衡量接收端訊號強度的基準，單位為功率)，RSSI值小表示干擾或訊號衰減程度大，選擇低傳輸速率較為合適，相對的RSSI值大表示該節點可負荷較高的傳輸速率。
 在網路效能方程式裡面，我們將分析這項參數。如：資料的傳輸是否能成功進行取決於$p_a$(資料傳輸嘗試機率，Attempt probability)的大小；根據SINR資訊來挑選資料傳輸速率 (Data rate)；定義碰撞區域(Collision Zone, CZ)，在此範圍內若出現同步傳輸必定會導致碰撞的發生，雖然載波偵測能避免$d_{cs}$內的並行傳輸(concurrent transmission)，但無法避免$d_{cs}$內的同步傳輸(simultaneous transmission)。分析完相關參數後，再去計算整體網路的效能(Capacity)。\\
 
-\item [\textbullet]	{\textbf{\Kai 第三年預期成果}}\\
-
-% A. 網路效能最佳化
-% A.1. 登山演算法 (Hill Climbing)
-% A.2. 模擬退火法 (Simulated Annealing)
-% A.3. 基因演算法 (Genetic Algorithm)
-% A.4. 改良型演算法 (Enhanced Algorithm)
-% B. 理論值計算及分析
-基於前兩年的計畫成果，我們可以得到網路的效能方程式，接下來會去尋找有效率的最佳化演算法讓整體網路的表現提升到最佳狀態。並且分析相關的演算法，結合其優點，設計出適用於這個網路環境的演算法，透過代入數據以驗證其效能，實現先前提到的在變化快速的無線環境下以最快的速度找出最佳$T_{cs}$以獲得最佳網路效能(network capacity)的目的。
+% C.5.1 網路效能最佳化
+% C.5.2 登山演算法 (Hill Climbing)
+% C.5.3 模擬退火法 (Simulated Annealing)
+% C.5.4 基因演算法 (Genetic Algorithm)
+% C.5.5 改良型演算法 (Enhanced Algorithm)
+% C.6 理論值計算及分析
+基於上述的計畫成果，我們可以得到網路的效能方程式，接下來會去尋找有效率的最佳化演算法讓整體網路的表現提升到最佳狀態。並且分析相關的演算法，結合其優點，設計出適用於這個網路環境的演算法，透過代入數據以驗證其效能，實現先前提到的在變化快速的無線環境下以最快的速度找出最佳$T_{cs}$以獲得最佳網路效能(network capacity)的目的。
 最後使用網路模擬器來模擬先前所描述的情境，將各個最佳化演算法得到的網路參數代入分析，並求出其最終的網路效能(network capacity)，以驗證演算法的效能是否符合理論。
 我們將研究各種不同的網路環境與拓樸，在這些規律與變動的網路環境中，藉由演算法去調整網路參數，使整體效能提高。經由實驗模擬，我們預期所提出的演算法能夠有效率的提升網路效能。\\
 
@@ -594,6 +610,9 @@ PCS Adaptation Algorithm Based on Loss Differentiation，是為一個結合傳�
 \bibitem{ton09_optwmn} H. Ma, R. Vijayakumar, S. Roy, and J. Zhu, “Optimizing 802.11 Wireless Mesh Networks Based on Physical Carrier Sensing”, IEEE/ACM Transactions on Networking, 17(5):1550-1562, Oct. 2009.
 \bibitem{infocom07_optcs} Y. Zhu, Q. Zhang, Z. Niu, and J. Zhu, “On Optimal Physical Carrier Sensing：Theoretical Analysis and Protocol Design”, In Proc. IEEE INFOCOM, pp. 2351-2355,  May 2007.
 \bibitem{icl13_iter} D. Kim and S. Kim, "An Iterative Algorithm for Optimal Carrier Sensing Threshold in Random CSMA/CA Wireless Networks", IEEE Communications Letters, 17(11):2076-2079, Nov. 2013.
+\bibitem{31} Boris Bellatta “IEEE 802.11ax: High-efficiency WLANS” IEEE Wireless Communications:38-46 Feb 2016
+\bibitem{32} Arjun Malhotra, Mukulika Maity, Avik Dutta,  “How much can we reuse? An empirical analysis of the performance benefits achieved by spatial-reuse of IEEE 802.11ax” , Jan. 2019.
+\bibitem{33} Aruba, “The Wi-Fi Market and the genesis of 802.11ax” , pp. 23-27.
 
 \end{thebibliography}
 \label{LastPage}
